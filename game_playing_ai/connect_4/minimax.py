@@ -116,7 +116,24 @@ class Connect4MiniMax:
                         (board[row + 2][col] == board[row + 3][col])):
                     return board[row][col]
 
-        # WINNER TEST - Diagonal Test
+        # WINNER TEST - Left-to-Right Diagonal Test
+        for row in range(len(board) - 3):
+            for col in range(len(board) - 3):
+                if ((board[row][col] != Utilities.EMPTY) and
+                        (board[row][col] == board[row + 1][col + 1]) and
+                        (board[row + 1][col + 1] == board[row + 2][col + 2]) and
+                        (board[row + 2][col + 2] == board[row + 3][col + 3])):
+                    return board[row][col]
+
+        # WINNER TEST - Right-to-Left Diagonal Test
+        for row in range(len(board) - 3):
+            for col in range(len(board) - 1, 2, -1):
+                if ((board[row][col] != Utilities.EMPTY) and
+                        (board[row][col] == board[row + 1][col - 1]) and
+                        (board[row + 1][col - 1] == board[row + 2][col - 2]) and
+                        (board[row + 2][col - 2] == board[row + 3][col - 3])):
+                    return board[row][col]
+
         # TODO
 
         return 0
