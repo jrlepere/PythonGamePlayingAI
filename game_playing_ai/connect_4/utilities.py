@@ -1,5 +1,8 @@
 
 class Utilities:
+    """
+    Class for shared functions and variables.
+    """
     MAX = 1
     MIN = -1
     EMPTY = 0
