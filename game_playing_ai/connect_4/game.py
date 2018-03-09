@@ -1,5 +1,6 @@
 import numpy as np
 
+
 class Connect4Game:
     """
     Class for playing Connect 4. Main objective is to house the board for the game,
@@ -30,6 +31,6 @@ class Connect4Game:
         """
         Plays a game of Connect 4.
         """
-        #TODO
+        # TODO
         return 0
 
