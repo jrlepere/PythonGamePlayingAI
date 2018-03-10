@@ -6,6 +6,7 @@ from game_playing_ai.connect_4.game import Utilities
 
 app = Flask(__name__)
 
+
 @app.route('/')
 def home_page():
     return render_template("home_page.html")

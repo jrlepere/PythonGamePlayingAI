@@ -2,6 +2,7 @@
 <html lang="en">
     <script>
 
+        // Data
         header = [0, 1, 2, 3, 4, 5, 6, 7]
         board = [[0, 0, 0, 0, 0, 0, 0, 0],
                  [0, 0, 0, 0, 0, 0, 0, 0],
@@ -12,17 +13,23 @@
                  [0, 0, 0, 0, 0, 0, 0, 0],
                  [0, 0, 0, 0, 0, 0, 0, 0]];
 
-        function setTile(col) {
+        /*
+         * Sets a tile on the board.
+         * @param col the column to place the tile.
+         */
+        function placeTile(col, v) {
             var row;
             for (row = 7; row >= 0; row --) {
                 if (board[row][col] == 0) {
-                    board[row][col] = -1;
+                    board[row][col] = v;
                     row = -1;
                 }
             }
-            setBoard();
         }
 
+        /*
+         * Sets the header row above the board.
+         */
         function setHeader() {
             var text = "";
             var col;
@@ -30,7 +37,7 @@
             text += '<div class="col-lg-2"></div>';
             for (col = 0; col < 8; col ++) {
                 text += '<div class="col-lg-1">';
-                text += '<input type="button" class="btn btn-info btn-circle" value=' + col + ' onclick="setTile(' + col + ');"/>';
+                text += '<input type="button" class="btn btn-info btn-circle" value=' + col + ' onclick="playHuman(' + col + ');"/>';
                 text += '</div>';
             }
             text += '<div class=col-lg-2"></div>';
@@ -38,6 +45,9 @@
             document.getElementById("the_header").innerHTML = text;
         }
 
+        /*
+         * Sets the board.
+         */
         function setBoard() {
             var text = "";
             var row;
@@ -62,6 +72,142 @@
             }
             document.getElementById("the_board").innerHTML = text;
         }
+
+        function playHuman(col) {
+            placeTile(col, -1);
+            setBoard();
+            var aiMove = getAIMove();
+            placeTile(aiMove, 1);
+            setBoard();
+        }
+
+        function getAIMove() {
+            function minimax(depth, max_depth, alpha, beta) {
+                var t = terminal_test();
+                if ((depth == max_depth) || (t != 0)) return [t];
+                var moves = getSuccessors();
+                var i;
+                var v = [0, 0];
+                if (depth % 2 == 0) {
+                    v[0] = -1000;
+                    for (i = 0; i < moves.length; i ++) {
+                        var row = moves[i][0];
+                        var col = moves[i][1];
+                        board[row][col] = 1;
+                        var res = minimax(depth + 1, max_depth, alpha, beta);
+                        board[row][col] = 0;
+                        if (res[0] > v[0]) {
+                            v[0] = res[0];
+                            v[1] = col;
+                        }
+                        if (v[0] > alpha) {
+                            alpha = v[0];
+                        }
+                        if (beta <= alpha) {
+                            return v;
+                        }
+                    }
+                    console.log(v[1]);
+                    return v;
+                } else {
+                    v[0] = 1000;
+                    for (i = 0; i < moves.length; i ++) {
+                        var row = moves[i][0];
+                        var col = moves[i][1];
+                        board[row][col] = -1;
+                        var res = minimax(depth + 1, max_depth, alpha, beta);
+                        board[row][col] = 0;
+                        if (res[0] < v[0]) {
+                            v[0] = res[0];
+                            v[1] = col;
+                        }
+                        if (v[0] > alpha) {
+                            alpha = v[0];
+                        }
+                        if (beta <= alpha) {
+                            return v;
+                        }
+                    }
+                    return v;
+                }
+            }
+
+            function getSuccessors() {
+                var successors = [];
+                var row;
+                var col;
+                for (col = 0; col < 8; col ++) {
+                    for (row = 7; row >= 0; row --) {
+                        if (board[row][col] == 0) {
+                            successors.push([row, col]);
+                            break;
+                        }
+                    }
+                }
+                return successors;
+            }
+            var max_depth = 6;  // Must be even
+            var move = minimax(0, max_depth, -1000, 1000);
+            return move[1];
+        }
+
+        function terminal_test() {
+
+            // Variables
+            var row;
+            var col;
+
+            // Horizontal Test
+            for (row = 0; row < 8; row ++) {
+                for (col = 0; col < 5; col ++) {
+                    if ((board[row][col] != 0) &&
+                        (board[row][col] == board[row][col+1]) &&
+                        (board[row][col+1] == board[row][col+2]) &&
+                        (board[row][col+2] == board[row][col+3])) {
+                            return board[row][col];
+                    }
+                }
+            }
+
+            // Vertical Test
+            for (col = 0; col < 8; col ++) {
+                for (row = 0; row < 5; row ++) {
+                    if ((board[row][col] != 0) &&
+                        (board[row][col] == board[row+1][col]) &&
+                        (board[row+1][col] == board[row+2][col]) &&
+                        (board[row+2][col] == board[row+3][col])) {
+                            return board[row][col];
+                    }
+                }
+            }
+
+            // Right-to-Left Diagonal Test
+            for (row = 0; row < 5; row ++) {
+                for(col = 0; col < 5; col ++) {
+                    if ((board[row][col] != 0) &&
+                        (board[row][col] == board[row+1][col+1]) &&
+                        (board[row+1][col+1] == board[row+2][col+2]) &&
+                        (board[row+2][col+2] == board[row+3][col+3])) {
+                            return board[row][col];
+                    }
+                }
+            }
+
+            // Left-to-Right Diagonal Test
+            for (row = 0; row < 5; row ++) {
+                for(col = 3; col < 8; col ++) {
+                    if ((board[row][col] != 0) &&
+                        (board[row][col] == board[row+1][col-1]) &&
+                        (board[row+1][col-1] == board[row+2][col-2]) &&
+                        (board[row+2][col-2] == board[row+3][col-3])) {
+                            return board[row][col];
+                    }
+                }
+            }
+
+            return 0;
+        }
+
     </script>
     <head>
         <meta charset="UTF-8">

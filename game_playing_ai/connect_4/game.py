@@ -1,6 +1,7 @@
 from game_playing_ai.connect_4.minimax import Connect4MiniMax
 from game_playing_ai.connect_4.utilities import Utilities
 
+print("TESTING")
 
 class Connect4Game:
     """
