@@ -3,7 +3,7 @@
     <script>
 
         // Data
-        header = [0, 1, 2, 3, 4, 5, 6, 7]
+        header = [0, 1, 2, 3, 4, 5, 6, 7];
         board = [[0, 0, 0, 0, 0, 0, 0, 0],
                  [0, 0, 0, 0, 0, 0, 0, 0],
                  [0, 0, 0, 0, 0, 0, 0, 0],
@@ -12,6 +12,7 @@
                  [0, 0, 0, 0, 0, 0, 0, 0],
                  [0, 0, 0, 0, 0, 0, 0, 0],
                  [0, 0, 0, 0, 0, 0, 0, 0]];
+        var winner = 0;
 
         /*
          * Sets a tile on the board.
@@ -30,19 +31,46 @@
         /*
          * Sets the header row above the board.
          */
-        function setHeader() {
+        function setHeader(winner) {
             var text = "";
             var col;
             text += '<div class="row">';
-            text += '<div class="col-lg-2"></div>';
+            text += '<div class="col-lg-1"></div>';
+            text += '<div class="col-lg-1">';
+            text += '<input type="button" class="btn btn-primary btn-md" value="Reset" onclick="reset();"/>';
+            text += '</div>';
             for (col = 0; col < 8; col ++) {
                 text += '<div class="col-lg-1">';
-                text += '<input type="button" class="btn btn-info btn-circle" value=' + col + ' onclick="playHuman(' + col + ');"/>';
+                if (winner != 0) {
+                    if (winner == 1) {
+                        text += 'YOU LOSE';
+                    } else {
+                        text += 'YOU WIN';
+                    }
+                } else {
+                    text += '<input type="button" class="btn btn-info btn-header" value=' + col + ' onclick="playHuman(' + col + ');"/>';
+                }
                 text += '</div>';
             }
             text += '<div class=col-lg-2"></div>';
             text += '</div>';
             document.getElementById("the_header").innerHTML = text;
+        }
+
+        /*
+         * Resets the board and header.
+         */
+        function reset() {
+            board = [[0, 0, 0, 0, 0, 0, 0, 0],
+                     [0, 0, 0, 0, 0, 0, 0, 0],
+                     [0, 0, 0, 0, 0, 0, 0, 0],
+                     [0, 0, 0, 0, 0, 0, 0, 0],
+                     [0, 0, 0, 0, 0, 0, 0, 0],
+                     [0, 0, 0, 0, 0, 0, 0, 0],
+                     [0, 0, 0, 0, 0, 0, 0, 0],
+                     [0, 0, 0, 0, 0, 0, 0, 0]];
+             setBoard();
+             setHeader(0);
         }
 
         /*
@@ -73,17 +101,31 @@
             document.getElementById("the_board").innerHTML = text;
         }
 
+        /*
+         * Plays the board for the human followed by AI move if human did not win.
+         */
         function playHuman(col) {
-            placeTile(col, -1);
-            setBoard();
-            var aiMove = getAIMove();
-            placeTile(aiMove, 1);
-            setBoard();
+            placeTile(col, -1);            // Place human tile
+            setBoard();                    // Reset board
+            w = terminalTest();            // Test if human won
+            if (w != 0) {
+                // Human Won
+                setHeader(-1);
+            } else {
+                var aiMove = getAIMove();  // Get AI move
+                placeTile(aiMove, 1);      // Place AI move
+                setBoard();                // Reset board
+                w = terminalTest();        // Test if ai won
+                if (w != 0) {
+                    // AI Won
+                    setHeader(1);
+                }
+            }
         }
 
         function getAIMove() {
             function minimax(depth, max_depth, alpha, beta) {
-                var t = terminal_test();
+                var t = terminalTest();
                 if ((depth == max_depth) || (t != 0)) return [t];
                 var moves = getSuccessors();
                 var i;
@@ -137,12 +179,12 @@
                 }
                 return successors;
             }
-            var max_depth = 6;  // Must be even
+            var max_depth = 8;
             var move = minimax(0, max_depth, -1000, 1000);
             return move[1];
         }
 
-        function terminal_test() {
+        function terminalTest() {
 
             // Variables
             var row;
@@ -209,11 +251,11 @@
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
         <style>
-            .btn-circle {
-                width: 65px;
-                height: 65px;
+            .btn-header {
+                width: 60px;
+                height: 35px;
                 padding: 6px 0px;
-                border-radius: 50%;
+                //border-radius: 50%;
                 text-align: center;
                 font-size: 12px;
                 line-height: 1.42857;
@@ -221,8 +263,8 @@
         </style>
         <style>
             .dot {
-                height: 65px;
-                width: 65px;
+                height: 60px;
+                width: 60px;
                 background-color: #bbb;
                 border-radius: 50%;
                 display: inline-block;
@@ -230,8 +272,18 @@
           </style>
     </head>
     <body>
+        <nav class="navbar navbar-inverse">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <a class="navbar-brand">GamePlayingAI</a>
+                </div>
+                <ul class="nav navbar-nav">
+                    <li><a href="/">Home</a></li>
+                </ul>
+            </div>
+        </nav>
         <p id="the_header"></p>
-        <script>setHeader();</script>
+        <script>setHeader(0);</script>
         <p id="the_board"></p>
         <script>setBoard();</script>
     </body>
