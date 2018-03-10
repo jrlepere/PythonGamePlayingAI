@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+    <script>
+
+        header = [0, 1, 2, 3, 4, 5, 6, 7]
+        board = [[0, 0, 0, 0, 0, 0, 0, 0],
+                 [0, 0, 0, 0, 0, 0, 0, 0],
+                 [0, 0, 0, 0, 0, 0, 0, 0],
+                 [0, 0, 0, 0, 0, 0, 0, 0],
+                 [0, 0, 0, 0, 0, 0, 0, 0],
+                 [0, 0, 0, 0, 0, 0, 0, 0],
+                 [0, 0, 0, 0, 0, 0, 0, 0],
+                 [0, 0, 0, 0, 0, 0, 0, 0]];
+
+        function setTile(col) {
+            var row;
+            for (row = 7; row >= 0; row --) {
+                if (board[row][col] == 0) {
+                    board[row][col] = -1;
+                    row = -1;
+                }
+            }
+            setBoard();
+        }
+
+        function setHeader() {
+            var text = "";
+            var col;
+            text += '<div class="row">';
+            text += '<div class="col-lg-2"></div>';
+            for (col = 0; col < 8; col ++) {
+                text += '<div class="col-lg-1">';
+                text += '<input type="button" class="btn btn-info btn-circle" value=' + col + ' onclick="setTile(' + col + ');"/>';
+                text += '</div>';
+            }
+            text += '<div class=col-lg-2"></div>';
+            text += '</div>';
+            document.getElementById("the_header").innerHTML = text;
+        }
+
+        function setBoard() {
+            var text = "";
+            var row;
+            var col;
+            for (row = 0; row < 8; row ++) {
+                text += '<div class="row">';
+                text += '<div class="col-lg-2"></div>';
+                for (col = 0; col < 8; col ++) {
+                    var color = "gray";
+                    if (board[row][col] == 1) {
+                        color = "red";
+                    }
+                    if (board[row][col] == -1) {
+                        color = "yellow";
+                    }
+                    text += '<div class="col-lg-1">';
+                    text += '<span class="dot" style="background-color:' + color + ';"></span>';
+                    text += '</div>';
+                }
+                text += '<div class="col-lg-2"></div>';
+                text += '</div>';
+            }
+            document.getElementById("the_board").innerHTML = text;
+        }
+    </script>
+    <head>
+        <meta charset="UTF-8">
+        <title>Connect 4</title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+        <style>
+            .btn-circle {
+                width: 50px;
+                height: 50px;
+                padding: 6px 0px;
+                border-radius: 50%;
+                text-align: center;
+                font-size: 12px;
+                line-height: 1.42857;
+            }
+        </style>
+        <style>
+            .dot {
+                height: 50px;
+                width: 50px;
+                background-color: #bbb;
+                border-radius: 50%;
+                display: inline-block;
+            }
+          </style>
+    </head>
+    <body>
+        <p id="the_header"></p>
+        <script>setHeader();</script>
+        <p id="the_board"></p>
+        <script>setBoard();</script>
+    </body>
+</html>

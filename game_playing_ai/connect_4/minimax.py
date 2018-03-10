@@ -26,6 +26,7 @@ class Connect4MiniMax:
         alpha = Connect4MiniMax.NEG_INFINITY
         beta = Connect4MiniMax.INFINITY
         play = Connect4MiniMax._h_mini_max(board, 0, alpha, beta)
+        print(play)
         return np.array([play[1], play[2]])
 
     @staticmethod
