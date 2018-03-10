@@ -100,14 +100,9 @@
                             v[0] = res[0];
                             v[1] = col;
                         }
-                        if (v[0] > alpha) {
-                            alpha = v[0];
-                        }
-                        if (beta <= alpha) {
-                            return v;
-                        }
+                        if (v[0] > alpha) alpha = v[0];
+                        if (beta <= alpha) return v;
                     }
-                    console.log(v[1]);
                     return v;
                 } else {
                     v[0] = 1000;
@@ -121,12 +116,8 @@
                             v[0] = res[0];
                             v[1] = col;
                         }
-                        if (v[0] > alpha) {
-                            alpha = v[0];
-                        }
-                        if (beta <= alpha) {
-                            return v;
-                        }
+                        if (v[0] < beta) beta = v[0];
+                        if (beta <= alpha) return v;
                     }
                     return v;
                 }
@@ -219,8 +210,8 @@
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
         <style>
             .btn-circle {
-                width: 50px;
-                height: 50px;
+                width: 65px;
+                height: 65px;
                 padding: 6px 0px;
                 border-radius: 50%;
                 text-align: center;
@@ -230,8 +221,8 @@
         </style>
         <style>
             .dot {
-                height: 50px;
-                width: 50px;
+                height: 65px;
+                width: 65px;
                 background-color: #bbb;
                 border-radius: 50%;
                 display: inline-block;
