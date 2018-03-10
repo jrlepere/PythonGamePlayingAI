@@ -35,12 +35,12 @@
             var text = "";
             var col;
             text += '<div class="row">';
-            text += '<div class="col-lg-1"></div>';
-            text += '<div class="col-lg-1">';
+            text += '<div class="col-xs-1"></div>';
+            text += '<div class="col-xs-1">';
             text += '<input type="button" class="btn btn-primary btn-md" value="Reset" onclick="reset();"/>';
             text += '</div>';
             for (col = 0; col < 8; col ++) {
-                text += '<div class="col-lg-1">';
+                text += '<div class="col-xs-1">';
                 if (winner != 0) {
                     if (winner == 1) {
                         text += 'YOU LOSE';
@@ -52,7 +52,7 @@
                 }
                 text += '</div>';
             }
-            text += '<div class=col-lg-2"></div>';
+            text += '<div class=col-xs-2"></div>';
             text += '</div>';
             document.getElementById("the_header").innerHTML = text;
         }
@@ -77,12 +77,12 @@
          * Sets the board.
          */
         function setBoard() {
-            var text = "";
+            var text = '<div class="container">';
             var row;
             var col;
             for (row = 0; row < 8; row ++) {
                 text += '<div class="row">';
-                text += '<div class="col-lg-2"></div>';
+                text += '<div class="col-xs-2"></div>';
                 for (col = 0; col < 8; col ++) {
                     var color = "gray";
                     if (board[row][col] == 1) {
@@ -91,13 +91,14 @@
                     if (board[row][col] == -1) {
                         color = "yellow";
                     }
-                    text += '<div class="col-lg-1">';
+                    text += '<div class="col-xs-1">';
                     text += '<span class="dot" style="background-color:' + color + ';"></span>';
                     text += '</div>';
                 }
-                text += '<div class="col-lg-2"></div>';
+                text += '<div class="col-xs-2"></div>';
                 text += '</div>';
             }
+            text += '</div>';
             document.getElementById("the_board").innerHTML = text;
         }
 
@@ -252,9 +253,9 @@
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
         <style>
             .btn-header {
-                width: 60px;
-                height: 35px;
-                padding: 6px 0px;
+                width: 100%;
+                height: 100%;
+                //padding: 6px 0px;
                 //border-radius: 50%;
                 text-align: center;
                 font-size: 12px;
@@ -263,11 +264,16 @@
         </style>
         <style>
             .dot {
-                height: 60px;
-                width: 60px;
                 background-color: #bbb;
                 border-radius: 50%;
                 display: inline-block;
+                overflow: hidden;
+                border: 1px solid black;
+                position: relative;
+                width: 100%;
+                height: auto;
+                padding-top: 100%;
+                background: white;
             }
           </style>
     </head>
