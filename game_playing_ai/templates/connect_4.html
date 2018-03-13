@@ -23,9 +23,27 @@
             for (row = 7; row >= 0; row --) {
                 if (board[row][col] == 0) {
                     board[row][col] = v;
-                    row = -1;
+                    break;
                 }
             }
+        }
+
+        function setHeaderAvailability() {
+            var col;
+            var row;
+            for (col = 0; col < 8; col ++) {
+                var canPlaceInCol = false;
+                for (row = 7; row >= 0; row --) {
+                    if (board[row][col] == 0) {
+                        canPlaceInCol = true;
+                        break;
+                    }
+                }
+                if (!canPlaceInCol) {
+                    header[col] = -1;
+                }
+            }
+            console.log(header);
         }
 
         /*
@@ -48,7 +66,9 @@
                         text += 'YOU WIN';
                     }
                 } else {
-                    text += '<input type="button" class="btn btn-info btn-header" value=' + col + ' onclick="playHuman(' + col + ');"/>';
+                    if (header[col] != -1) {
+                        text += '<input type="button" class="btn btn-info btn-header" value=' + col + ' onclick="playHuman(' + col + ');"/>';
+                    }
                 }
                 text += '</div>';
             }
@@ -61,6 +81,7 @@
          * Resets the board and header.
          */
         function reset() {
+            header = [0, 1, 2, 3, 4, 5, 6, 7];
             board = [[0, 0, 0, 0, 0, 0, 0, 0],
                      [0, 0, 0, 0, 0, 0, 0, 0],
                      [0, 0, 0, 0, 0, 0, 0, 0],
@@ -120,6 +141,9 @@
                 if (w != 0) {
                     // AI Won
                     setHeader(1);
+                } else {
+                    setHeaderAvailability();
+                    setHeader(0);
                 }
             }
         }
@@ -281,7 +305,7 @@
         <nav class="navbar navbar-inverse">
             <div class="container-fluid">
                 <div class="navbar-header">
-                    <a class="navbar-brand">GamePlayingAI</a>
+                    <a class="navbar-brand">JLGames</a>
                 </div>
                 <ul class="nav navbar-nav">
                     <li><a href="/">Home</a></li>
