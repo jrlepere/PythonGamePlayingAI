@@ -14,18 +14,8 @@
                  [0, 0, 0, 0, 0, 0, 0, 0]];
         var winner = 0;
 
-        /*
-         * Sets a tile on the board.
-         * @param col the column to place the tile.
-         */
-        function placeTile(col, v) {
-            var row;
-            for (row = 7; row >= 0; row --) {
-                if (board[row][col] == 0) {
-                    board[row][col] = v;
-                    break;
-                }
-            }
+        function sleep(ms) {
+            return new Promise(resolve => setTimeout(resolve, ms));
         }
 
         function setHeaderAvailability() {
@@ -124,20 +114,60 @@
         }
 
         /*
-         * Plays the board for the human followed by AI move if human did not win.
+         * Plays the board for the human followed by AI move if human does not win.
          */
-        function playHuman(col) {
-            placeTile(col, -1);            // Place human tile
-            setBoard();                    // Reset board
-            w = terminalTest();            // Test if human won
+        async function playHuman(col) {
+
+            /*
+             * Gets a list of all rows that the tile will reach when dropped.
+             * @param col the column to place the tile.
+             * @return a list of all rows the tile will reach
+             */
+            function placeTile(col) {
+                var rows = [];
+                var row;
+                for (row = 0; row < 8; row ++) {
+                    rows.push(row);
+                    if ((row == 7) || (board[row+1][col] != 0)) {
+                        break;
+                    }
+                }
+                return rows;
+            }
+
+            $(':button').prop('disabled', true);       // Disables all buttons until moves are placed.
+
+            var sleep_time = 150;                      // Sleep time to place tiles
+
+            var rows = placeTile(col);                 // Human play
+            var i;
+            for (i = 0; i < rows.length; i ++) {
+                board[rows[i]][col] = -1;
+                setBoard();
+                if (i == rows.length - 1) {
+                    break;
+                }
+                await sleep(sleep_time);
+                board[rows[i]][col] = 0;
+            }
+            w = terminalTest();                        // Test if human won
             if (w != 0) {
                 // Human Won
                 setHeader(-1);
             } else {
-                var aiMove = getAIMove();  // Get AI move
-                placeTile(aiMove, 1);      // Place AI move
-                setBoard();                // Reset board
-                w = terminalTest();        // Test if ai won
+                var ai_col = getAIMove();              // Get AI move
+                rows = placeTile(ai_col);              // AI play
+                var j;
+                for (j = 0; j < rows.length; j ++) {
+                    board[rows[j]][ai_col] = 1;
+                    setBoard();
+                    if (j == rows.length - 1) {
+                        break;
+                    }
+                    await sleep(sleep_time);
+                    board[rows[j]][ai_col] = 0;
+                }
+                w = terminalTest();        // Test if AI won
                 if (w != 0) {
                     // AI Won
                     setHeader(1);
