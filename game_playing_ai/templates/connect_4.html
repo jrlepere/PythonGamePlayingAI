@@ -192,9 +192,11 @@
 
             function getSuccessors() {
                 var successors = [];
+                var order = [3, 4, 2, 5, 1, 6, 0, 7]
                 var row;
                 var col;
-                for (col = 0; col < 8; col ++) {
+                for (i = 0; i < 8; i ++) {
+                    col = order[i];
                     for (row = 7; row >= 0; row --) {
                         if (board[row][col] == 0) {
                             successors.push([row, col]);
