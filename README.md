@@ -1,2 +1,3 @@
-# PythonGamePlayingAI
-Python web based game playing AI
+# WebGamePlayingAI
+www.jl-games.com
+Web based game playing AI
